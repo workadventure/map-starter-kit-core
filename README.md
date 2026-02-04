@@ -63,55 +63,16 @@ Recommended in **package.json** for correct consumption:
 npm install @workadventure/map-starter-kit-core
 ```
 
-**2. Import the Express app (ESM)**
+**2. Import and use it with vite node app plugin**
 
 ```ts
-import core from "@workadventure/map-starter-kit-core";
+import core from '@workadventure/map-starter-kit-core/dist/server.js';
 
-const app = core.default;  // or core.viteNodeApp (same Express Application)
-
-app.listen(3000, () => console.log("Listening on 3000"));
+export default core.default;
+export const viteNodeApp = core.viteNodeApp;
 ```
 
-**3. Or use the explicit entry (same result)**
-
-```ts
-import core from "@workadventure/map-starter-kit-core/dist/server.js";
-```
-
-**4. TypeScript**
-
-Types come from `dist/server.d.ts`: the default export is typed as `{ default: Application; viteNodeApp: Application }`. Ensure the consuming project has `express` and `@types/express` so the `Application` type resolves.
-
-**5. CommonJS**
-
-```ts
-const core = require("@workadventure/map-starter-kit-core");
-const app = core.default;
-```
-
-**Important:** Do not import from `@workadventure/map-starter-kit-core/src/server` or rely on `src/` in the package. Only the built `dist/server.js` and its types are the supported contract.
-
----
-
-## Usage
-
-### As a dependency (programmatic)
-
-Use the built Express app in your own server:
-
-```ts
-import core from "@workadventure/map-starter-kit-core";
-
-const app = core.default;  // or core.viteNodeApp
-
-// Mount or start your server
-app.listen(3000, () => console.log("Listening on 3000"));
-```
-
-Types are provided via `dist/server.d.ts`: `core` is typed as `{ default: Application; viteNodeApp: Application }`.
-
-### Development server (standalone)
+**3. Development server (standalone)**
 
 From the **map-starter-kit** repo (or a project that uses this package as the core):
 
@@ -121,15 +82,7 @@ npm run dev
 
 Runs the Vite dev server with vite-plugin-node (Express). Opens the app at the configured host (e.g. `http://localhost:5173/`).
 
-### Build for production
-
-```bash
-npm run build
-```
-
-- Runs `tsc` (type-check only; `noEmit: true` in tsconfig)
-- Builds the server bundle with Vite into `dist/server.js`
-- Copies `types/server.d.ts` to `dist/server.d.ts` for published types
+---
 
 ## Project structure
 
