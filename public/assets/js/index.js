@@ -1,3 +1,5 @@
+import Mustache from 'https://cdn.jsdelivr.net/npm/mustache@4.2.0/+esm';
+
 // Function to retrieve the list of maps from the API
 async function getMapsList() {
     try {
@@ -103,7 +105,6 @@ const CARD_TEMPLATE = `
 // Load maps from API and render map cards with Mustache
 async function loadTMJ() {
     try {
-        const Mustache = (await import('https://cdn.jsdelivr.net/npm/mustache@4.2.0/+esm')).default;
         const maps = await getMapsList();
 
         const mapImages = maps

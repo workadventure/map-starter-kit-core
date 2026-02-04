@@ -2,10 +2,10 @@ import express from 'express';
 import * as path from "node:path";
 import * as fs from "node:fs";
 import cors from 'cors';
-import { getCoreRoot } from './getCoreRoot.js';
-import { FrontController } from './controllers/FrontController.js';
-import { MapController } from './controllers/MapController.js';
-import { UploaderController } from './controllers/UploaderController.js';
+import { getCoreRoot } from './utils/getCoreRoot.ts';
+import { FrontController } from './controllers/FrontController.ts';
+import { MapController } from './controllers/MapController.ts';
+import { UploaderController } from './controllers/UploaderController.ts';
 
 const app = express();
 

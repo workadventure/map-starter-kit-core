@@ -27,8 +27,7 @@
     "branches": ["main", "master"]
   },
   "files": [
-    "dist", 
-    "types",
+    "dist",
     "public",
     "README.md"
   ],

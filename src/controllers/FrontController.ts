@@ -2,7 +2,7 @@ import express from 'express';
 import * as fs from "node:fs";
 import * as path from "node:path";
 import Mustache from 'mustache';
-import { getCoreRoot } from '../getCoreRoot.js';
+import { getCoreRoot } from '../utils/getCoreRoot.ts';
 
 export class FrontController {
     private app: express.Application;
