@@ -74,7 +74,91 @@ async function createBackgroundImageFade(images = null) {
     }, 5000); // Change image every 5 seconds
 }
 
-// Exporter la fonction pour qu'elle soit accessible depuis index.html
-// Use a global declaration for TypeScript/JavaScript
-window.getMapsList = getMapsList;
-window.createBackgroundImageFade = createBackgroundImageFade;
+// Mustache template for a map card (rendered in loadTMJ)
+const CARD_TEMPLATE = `
+    <div class="map-cover" style="background-image: url('{{mapImageUrl}}');"></div>
+    <div class="map-date">
+        Last edit: {{lastModifiedFormatted}}
+    </div>
+    <div class="map-name">
+        {{mapName}}
+    </div>
+    <div class="map-detail">
+        <div class="map-file">
+            <strong>{{filename}}</strong>.tmj
+        </div>
+        <div class="map-weight">
+            <strong>{{size}}</strong>
+            <span style="opacity: .5">Mo</span>
+        </div>
+    </div>
+    <div class="map-desc">
+        {{mapDescription}}
+    </div>
+    <div class="map-testurl">
+        <a href="#" class="btn" data-map-path="{{path}}">Test my map</a>
+    </div>
+`;
+
+// Load maps from API and render map cards with Mustache
+async function loadTMJ() {
+    try {
+        const Mustache = (await import('https://cdn.jsdelivr.net/npm/mustache@4.2.0/+esm')).default;
+        const maps = await getMapsList();
+
+        const mapImages = maps
+            .map((map) => {
+                if (map.mapImage) {
+                    return map.mapImage.startsWith('http') ? map.mapImage : `/${map.mapImage}`;
+                }
+                return null;
+            })
+            .filter((img) => img !== null);
+
+        if (mapImages.length > 0) {
+            await createBackgroundImageFade(mapImages);
+        }
+
+        const defaultPlaceholder = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="1620" height="1024"><rect fill="%231b2a41" width="100%" height="100%"/></svg>';
+        const mapsData = maps.map((map) => {
+            const mapImageUrl = map.mapImage
+                ? (map.mapImage.startsWith('http') ? map.mapImage : `/${map.mapImage}`)
+                : (mapImages.length > 0 ? mapImages[0] : defaultPlaceholder);
+            return {
+                ...map,
+                mapImageUrl,
+                mapDescription: map.mapDescription || 'No description available',
+            };
+        });
+
+        const mainElement = document.querySelector('main');
+        if (!mainElement) return;
+
+        mainElement.innerHTML = '';
+        mapsData.forEach((map) => {
+            const section = document.createElement('section');
+            section.className = 'card-map';
+            section.innerHTML = Mustache.render(CARD_TEMPLATE, map);
+
+            const testBtn = section.querySelector('.map-testurl a');
+            if (testBtn) {
+                testBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const host = window.location.host;
+                    let path = window.location.pathname;
+                    if (path.endsWith('index.html')) {
+                        path = path.slice(0, -'index.html'.length);
+                    }
+                    const instanceId = Math.random().toString(36).substring(2, 15);
+                    const url = `https://play.workadventu.re/_/${instanceId}/${host}${path}${map.path}`;
+                    window.open(url, '_blank');
+                });
+            }
+            mainElement.appendChild(section);
+        });
+    } catch (error) {
+        console.error('Error loading maps:', error);
+    }
+}
+
+export { getMapsList, getImagesList, createBackgroundImageFade, loadTMJ };

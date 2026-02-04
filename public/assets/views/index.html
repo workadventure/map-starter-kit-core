@@ -13,108 +13,11 @@
     <title>WorkAdventure build your map</title>
     <link rel="icon" href="public/images/favicon.svg" type="image/svg+xml">
     <script type="module">
-        document.addEventListener("DOMContentLoaded", (event) => {
-            // Load index.js to have access to getMapsList
-            import('/public/assets/js/index.js').then(() => {
-                loadTMJ();
+        document.addEventListener("DOMContentLoaded", () => {
+            import('/public/assets/js/index.js').then((module) => {
+                module.loadTMJ();
             });
         });
-
-        async function loadTMJ() {
-            try {
-                // Get the list of maps from the API
-                const maps = await window.getMapsList();
-                
-                // Retrieve map images for background fade
-                const mapImages = maps
-                    .map(map => {
-                        if (map.mapImage) {
-                            return map.mapImage.startsWith('http') ? map.mapImage : `/${map.mapImage}`;
-                        }
-                        return null;
-                    })
-                    .filter(img => img !== null);
-                
-                // Create background image fade
-                if (mapImages.length > 0) {
-                    await window.createBackgroundImageFade(mapImages);
-                }
-                
-                // Mustache template for a map card
-                const cardTemplate = `
-                    <div class="map-cover" style="background-image: url('{{mapImageUrl}}');"></div>
-                    <div class="map-date">
-                        Last edit: {{lastModifiedFormatted}}
-                    </div>
-                    <div class="map-name">
-                        {{mapName}}
-                    </div>
-                    <div class="map-detail">
-                        <div class="map-file">
-                            <strong>{{filename}}</strong>.tmj
-                        </div>
-                        <div class="map-weight">
-                            <strong>{{size}}</strong>
-                            <span style="opacity: .5">Mo</span>
-                        </div>
-                    </div>
-                    <div class="map-desc">
-                        {{mapDescription}}
-                    </div>
-                    <div class="map-testurl">
-                        <a href="#" class="btn" data-map-path="{{path}}">Test my map</a>
-                    </div>
-                `;
-
-                // Prepare data for Mustache
-                const mapsData = maps.map(map => {
-                    // Build the image URL - use the first available image or a default image
-                    const mapImageUrl = map.mapImage 
-                        ? (map.mapImage.startsWith('http') ? map.mapImage : `/${map.mapImage}`)
-                        : (mapImages.length > 0 ? mapImages[0] : 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="1620" height="1024"><rect fill="%231b2a41" width="100%" height="100%"/></svg>');
-                    
-                    return {
-                        ...map,
-                        mapImageUrl: mapImageUrl,
-                        mapDescription: map.mapDescription || 'No description available'
-                    };
-                });
-
-                // Render each map with Mustache and inject them into the container
-                const mainElement = document.querySelector('main');
-                if (mainElement) {
-                    // Clear existing content
-                    mainElement.innerHTML = '';
-                    
-                    // Create a section for each map
-                    mapsData.forEach(map => {
-                        const section = document.createElement('section');
-                        section.className = 'card-map';
-                        section.innerHTML = Mustache.render(cardTemplate, map);
-                        
-                        // Add an event handler for the "Test my map" button
-                        const testBtn = section.querySelector('.map-testurl a');
-                        if (testBtn) {
-                            testBtn.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                const host = window.location.host;
-                                let path = window.location.pathname;
-                                if (path.endsWith('index.html')) {
-                                    path = path.substr(0, path.length - 'index.html'.length);
-                                }
-                                const instanceId = Math.random().toString(36).substring(2, 15);
-                                const url = `https://play.workadventu.re/_/${instanceId}/${host}${path}${map.path}`;
-                                window.open(url, '_blank');
-                            });
-                        }
-                        
-                        mainElement.appendChild(section);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading maps:', error);
-            }
-        }
     </script>
 </head>
 
@@ -150,7 +53,7 @@
         </div>
     </header>
     <main>
-        <!-- Map cards will be injected here dynamically by Mustache -->
+        <!-- Map cards are injected here by index.js -->
     </main>
     <div class="button-wrapper">
         <div style="flex-grow: 1;">

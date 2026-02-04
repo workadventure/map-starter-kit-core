@@ -14,7 +14,7 @@
     <link rel="icon" href="public/images/favicon.svg" type="image/svg+xml">
     <script type="module">
         document.addEventListener("DOMContentLoaded", async () => {
-            await import('/public/assets/js/index.js');
+            const module = await import('/public/assets/js/index.js');
             const main = document.querySelector('main .maps-container');
             const emptyEl = document.getElementById('maps-empty');
             const errorEl = document.getElementById('maps-error');
@@ -84,8 +84,8 @@
 
                 // Background fade from first map image if available
                 const firstImg = maps[0]?.mapImage;
-                if (firstImg && typeof window.createBackgroundImageFade === 'function') {
-                    window.createBackgroundImageFade([firstImg]);
+                if (firstImg && typeof module.createBackgroundImageFade === 'function') {
+                    module.createBackgroundImageFade([firstImg]);
                 }
             } catch (e) {
                 loadingEl.style.display = 'none';

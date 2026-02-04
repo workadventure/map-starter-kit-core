@@ -14,8 +14,8 @@
     <link rel="icon" href="public/images/favicon.svg" type="image/svg+xml">
     <script type="module">
         document.addEventListener("DOMContentLoaded", (event) => {
-            import('/public/assets/js/index.js').then(() => {
-                window.createBackgroundImageFade();
+            import('/public/assets/js/index.js').then((module) => {
+                module.createBackgroundImageFade();
             });
         });
     </script>
