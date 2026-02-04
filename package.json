@@ -2,10 +2,10 @@
   "name": "@workadventure/map-starter-kit-core",
   "version": "1.0.2",
   "description": "Core app, HTML pages and static assets for the WorkAdventure Map Starter Kit. Update this package to get new UI and server features without touching your maps or config.",
-  "main": "src/app.ts",
+  "main": "src/server.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build && node -e \"require('fs').copyFileSync('types/server.d.ts','dist/server.d.ts')\""
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,19 @@
   "homepage": "https://github.com/workadventure/map-starter-kit-core#readme",
   "release": {
     "branches": ["main", "master"]
+  },
+  "files": ["dist", "README.md"],
+  "exports": {
+    ".": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "require": "./dist/server.js"
+    },
+    "./dist/server.js": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "require": "./dist/server.js"
+    }
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
