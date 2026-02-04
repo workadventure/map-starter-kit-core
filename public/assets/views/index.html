@@ -10,13 +10,12 @@
 
     <link href="public/styles/styles.css" rel="stylesheet">
 
-    <title>WorkAdventure test map</title>
-    <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-    <script src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js"></script>
+    <title>WorkAdventure build your map</title>
+    <link rel="icon" href="public/images/favicon.svg" type="image/svg+xml">
     <script type="module">
         document.addEventListener("DOMContentLoaded", (event) => {
             // Load index.js to have access to getMapsList
-            import('/public/assets/index.js').then(() => {
+            import('/public/assets/js/index.js').then(() => {
                 loadTMJ();
             });
         });

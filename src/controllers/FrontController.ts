@@ -36,7 +36,7 @@ export class FrontController {
      */
     private async renderTemplate(filename: string): Promise<string> {
         const coreRoot = getCoreRoot();
-        const templatesDir = path.join(coreRoot, 'src/views');
+        const templatesDir = path.join(coreRoot, 'public/assets/views');
         if(!fs.existsSync(templatesDir)) {
             throw new Error(`Templates directory not found: ${templatesDir}`);
         }

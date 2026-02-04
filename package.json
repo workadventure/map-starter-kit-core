@@ -1,6 +1,6 @@
 {
   "name": "@workadventure/map-starter-kit-core",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Core app, HTML pages and static assets for the WorkAdventure Map Starter Kit. Update this package to get new UI and server features without touching your maps or config.",
   "main": "src/server.ts",
   "scripts": {
@@ -26,7 +26,12 @@
   "release": {
     "branches": ["main", "master"]
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist", 
+    "types",
+    "public",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/server.d.ts",

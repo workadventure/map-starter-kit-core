@@ -10,8 +10,16 @@
 
     <link href="public/styles/styles.css" rel="stylesheet">
 
-    <title>WorkAdventure test map</title>
-    <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+    <title>WorkAdventure build your map</title>
+    <link rel="icon" href="public/images/favicon.svg" type="image/svg+xml">
+    <script type="module">
+        document.addEventListener("DOMContentLoaded", (event) => {
+            // Load index.js to have access to getMapsList
+            import('/public/assets/js/index.js').then(() => {
+                window.createBackgroundImageFade();
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -41,25 +49,17 @@
             </a>
         </div>
         <div class="btn-header-wrapper">
-            <a href="#" class="btn btn-light">Talk to the community</a>
-            <a href="#" class="btn">Documentation</a>
+            <a href="https://discord.gg/G6Xh9ZM9aR" target="_blank" class="btn btn-light">Talk to the community</a>
+            <a href="https://docs.workadventu.re/map-building/" target="_blank" class="btn">Documentation</a>
         </div>
-        <script type="module">
-            document.addEventListener("DOMContentLoaded", (event) => {
-                // Load index.js to have access to getMapsList
-                import('/public/assets/index.js').then(() => {
-                    window.createBackgroundImageFade();
-                });
-            });
-        </script>
     </header>
     <main>
         <section class="form-center">
             <h1>
-                Which version of WorkAdventure do you use?
+                How do you want to publish your map?
             </h1>
             <div class="sub-heading">
-                Choose the setup that matches how your WorkAdventure instance is running. This will help us adapt the publishing process to your setup.
+                Choose the workflow that best fits your team and your way of working.
             </div>
             <div class="radio-wrapper">
                 <label class="radio-card">
@@ -70,27 +70,27 @@
                         </svg>
 
                         <h2>
-                            I use self-hosted
+                            Advanced publishing
                         </h2>
                         <div>
-                            Your map is published on your own WorkAdventure instance.
-                            <strong>You manage the hosting, configuration, and updates yourself.</strong>
+                            <strong>Designed for teams using Git and file versioning.</strong>
+                            Full control over your files and collaboration workflow.
                         </div>
                     </div>
                 </label>
                 <label class="radio-card">
-                    <input name="advanced" class="radio" type="radio">
+                    <input name="advanced" class="radio" type="radio" checked>
                     <div class="card-details">
                         <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M8.125 19.5L16.25 27.625L32.5 11.375" stroke="#4156F6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
 
                         <h2>
-                            I use SaaS version
+                            Recommended publishing
                         </h2>
                         <div>
-                            Your map is published on the WorkAdventure platform.
-                            <strong>We handle hosting, updates, and infrastructure for you.</strong>
+                            <strong>The easiest and fastest way to publish your map.</strong>
+                            No technical setup required. Ideal for getting started quickly.
                         </div>
                     </div>
                 </label>
@@ -100,43 +100,44 @@
     </main>
     <div class="button-wrapper">
         <div>
-            <a href="step1-git" class="btn btn-ghost">
+            <a href="/" class="btn btn-ghost">
                 Previous
             </a>
         </div>
         <div style="flex-grow: 1;">
         </div>
         <div>
-            <a href="step3-steps" class="btn btn-secondary">
-                Configure
+            <a href="step2-hosting" class="btn btn-secondary">
+                Start configuration
             </a>
         </div>
     </div>
 </div>
 <div class="bg"></div>
 <script>
-    // Get radio buttons by finding the label containing "I use self-hosted"
+    // Get radio buttons by finding the label containing "Advanced publishing"
     const radioButtons = document.querySelectorAll('input[name="advanced"]');
-    const configureButton = document.querySelector('a[href="step3-steps"]');
+    const startConfigButton = document.querySelector('a[href="step2-hosting"]');
+    const docUrl = "https://docs.workadventu.re/map-building/tiled-editor/publish/wa-hosted";
 
-    // Find "I use self-hosted" radio button by checking parent label text
-    let selfHostedRadio = null;
+    // Find Advanced publishing radio button by checking parent label text
+    let advancedPublishingRadio = null;
     radioButtons.forEach(radio => {
         const label = radio.closest('label');
-        if (label && label.textContent.includes('I use self-hosted')) {
-            selfHostedRadio = radio;
+        if (label && label.textContent.includes('Advanced publishing')) {
+            advancedPublishingRadio = radio;
         }
     });
 
     // Function to update button href based on selection
     function updateButtonHref() {
-        // Check if "I use self-hosted" is selected
-        if (selfHostedRadio && selfHostedRadio.checked) {
-            configureButton.href = "step3-steps-selfhosted";
-            configureButton.removeAttribute("target");
+        // Check if Advanced publishing is selected
+        if (advancedPublishingRadio && advancedPublishingRadio.checked) {
+            startConfigButton.href = docUrl;
+            startConfigButton.target = "_blank";
         } else {
-            configureButton.href = "step3-steps";
-            configureButton.removeAttribute("target");
+            startConfigButton.href = "step2-hosting";
+            startConfigButton.removeAttribute("target");
         }
     }
 

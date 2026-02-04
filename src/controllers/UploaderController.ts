@@ -144,7 +144,7 @@ export class UploaderController {
         // Route to get current configuration status
         this.router.get('/status', async (_, res) => {
             try {
-                const envSecretPath = path.join(process.cwd(), 'src/.env.secret');
+                const envSecretPath = path.join(process.cwd(), '.env.secret');
 
                 const hasSecretFile = await fs.promises.access(envSecretPath)
                     .then(() => true)
@@ -167,14 +167,13 @@ export class UploaderController {
                         uploadDirectory: uploadDirectory || null
                     };
                 }
-
-                res.json({
+                return res.json({
                     hasSecretFile,
                     secretConfig
                 });
             } catch (error) {
                 console.error('Error getting uploader status:', error);
-                res.status(500).json({
+                return res.status(500).json({
                     error: 'Error getting uploader status',
                     message: error instanceof Error ? error.message : 'Unknown error'
                 });

@@ -11,10 +11,10 @@
     <link href="public/styles/styles.css" rel="stylesheet">
 
     <title>Your maps - Self-hosted</title>
-    <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="public/images/favicon.svg" type="image/svg+xml">
     <script type="module">
         document.addEventListener("DOMContentLoaded", async () => {
-            await import('/public/assets/index.js');
+            await import('/public/assets/js/index.js');
             const main = document.querySelector('main .maps-container');
             const emptyEl = document.getElementById('maps-empty');
             const errorEl = document.getElementById('maps-error');

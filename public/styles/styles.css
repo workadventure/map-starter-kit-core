@@ -5,13 +5,13 @@
 html,
 body {
   min-height: 100%;
+  font-family: "Roboto Condensed", Arial, sans-serif;
 }
 
 body {
   display: flex;
   flex-direction: column;
   margin: 0;
-  font-family: "Roboto", Arial, sans-serif;
   text-align: center;
   background: #1b2a41;
   color: white;
@@ -125,7 +125,6 @@ header .btn-header-wrapper {
   background-position: center;
 }
 .card-map .map-date {
-  font-family: "Roboto Condensed", Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -138,7 +137,6 @@ header .btn-header-wrapper {
   margin-top: 12px;
 }
 .card-map .map-name {
-  font-family: "Roboto", "Arial", sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -155,7 +153,6 @@ header .btn-header-wrapper {
   margin-bottom: 6px;
 }
 .card-map .map-detail .map-file {
-  font-family: "Roboto Condensed", Arial, sans-serif;
   font-style: italic;
   font-weight: 400;
   font-size: 13px;
@@ -166,7 +163,6 @@ header .btn-header-wrapper {
   color: #ffffff;
 }
 .card-map .map-detail .map-weight {
-  font-family: "Roboto Condensed", Arial, sans-serif;
   font-style: italic;
   font-weight: 400;
   font-size: 13px;
@@ -254,7 +250,6 @@ header .btn-header-wrapper {
   text-align: left;
 }
 .form-center.steps .step .alert .alert-text {
-  font-family: "Roboto Condensed";
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
@@ -295,7 +290,6 @@ header .btn-header-wrapper {
   border: 1px solid #66E979;
 }
 .form-center h1 {
-  font-family: "Oswald";
   font-weight: 400;
   font-size: 40px;
 }
@@ -341,7 +335,6 @@ header .btn-header-wrapper {
   position: relative;
 }
 .form-center .radio-wrapper .radio-card .card-details h2 {
-  font-family: "Oswald";
   font-weight: 400;
   font-size: 26px;
   margin-bottom: 8px;
