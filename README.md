@@ -16,7 +16,83 @@ Core app, HTML pages and static assets for the **WorkAdventure Map Starter Kit**
 npm install @workadventure/map-starter-kit-core
 ```
 
-**Peer / consumer:** The built server expects `express` to be available at runtime. For TypeScript consumers, `@types/express` is used for the exported `Application` type.
+**Peer / consumer:** The built server expects `express` to be available at runtime. For TypeScript consumers, install `@types/express` so the exported `Application` type resolves.
+
+---
+
+## Package exports and usage from another package
+
+This package is built and published as a **single server bundle**. Consumers must use the built output, not the source, to avoid module resolution errors.
+
+### How exports are managed
+
+| Field | Role |
+|--------|------|
+| **`main`** | Entry when a tool doesn’t use `exports`. Should point to `dist/server.js` so the bundle is used, not `src/server.ts`. |
+| **`types`** | Tells TypeScript which declaration file to use for the package entry (`dist/server.d.ts`). |
+| **`exports`** | Modern entry map: `"."` and `"./dist/server.js"` resolve to `dist/server.js` with types `dist/server.d.ts`. |
+| **`files`** | What gets published: `dist`, `public`, `README.md`. Source (`src/`) is not published so consumers never resolve to `.ts` files. |
+
+Recommended in **package.json** for correct consumption:
+
+```json
+{
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "require": "./dist/server.js"
+    },
+    "./dist/server.js": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "require": "./dist/server.js"
+    }
+  },
+  "files": ["dist", "public", "README.md"]
+}
+```
+
+### Using the package in another project
+
+**1. Install the package**
+
+```bash
+npm install @workadventure/map-starter-kit-core
+```
+
+**2. Import the Express app (ESM)**
+
+```ts
+import core from "@workadventure/map-starter-kit-core";
+
+const app = core.default;  // or core.viteNodeApp (same Express Application)
+
+app.listen(3000, () => console.log("Listening on 3000"));
+```
+
+**3. Or use the explicit entry (same result)**
+
+```ts
+import core from "@workadventure/map-starter-kit-core/dist/server.js";
+```
+
+**4. TypeScript**
+
+Types come from `dist/server.d.ts`: the default export is typed as `{ default: Application; viteNodeApp: Application }`. Ensure the consuming project has `express` and `@types/express` so the `Application` type resolves.
+
+**5. CommonJS**
+
+```ts
+const core = require("@workadventure/map-starter-kit-core");
+const app = core.default;
+```
+
+**Important:** Do not import from `@workadventure/map-starter-kit-core/src/server` or rely on `src/` in the package. Only the built `dist/server.js` and its types are the supported contract.
+
+---
 
 ## Usage
 
@@ -25,7 +101,7 @@ npm install @workadventure/map-starter-kit-core
 Use the built Express app in your own server:
 
 ```ts
-import core from "@workadventure/map-starter-kit-core/dist/server.js";
+import core from "@workadventure/map-starter-kit-core";
 
 const app = core.default;  // or core.viteNodeApp
 
@@ -33,7 +109,7 @@ const app = core.default;  // or core.viteNodeApp
 app.listen(3000, () => console.log("Listening on 3000"));
 ```
 
-Types are provided: `core` is typed as `{ default: Application; viteNodeApp: Application }` (see `types/server.d.ts`).
+Types are provided via `dist/server.d.ts`: `core` is typed as `{ default: Application; viteNodeApp: Application }`.
 
 ### Development server (standalone)
 
@@ -61,22 +137,29 @@ npm run build
 map-starter-kit-core/
 ├── src/
 │   ├── server.ts              # Express app entry (CORS, static, routes)
-│   ├── getCoreRoot.ts         # Resolve core package root (cwd vs package dir)
-│   ├── controllers/
-│   │   ├── FrontController.ts # HTML pages (Mustache): /, step1-git, step2-hosting, step3-*, step4-*
-│   │   ├── MapController.ts   # /maps/list – list .tmj maps with properties
-│   │   └── UploaderController.ts  # /uploader/* – configure, status, maps-storage-list, upload
-│   └── views/                 # Mustache HTML templates
-│       ├── index.html
-│       ├── step1-git.html … step4-validated-selfhosted.html
-├── public/                    # Static assets (images, styles, etc.)
+│   ├── utils/
+│   │   └── getCoreRoot.ts     # Resolve core package root (cwd vs package dir)
+│   └── controllers/
+│       ├── FrontController.ts # HTML pages (Mustache): /, step1-git, step2-hosting, step3-*, step4-*
+│       ├── MapController.ts   # /maps/list – list .tmj maps with properties
+│       └── UploaderController.ts  # /uploader/* – configure, status, maps-storage-list, upload
+├── public/                    # Static assets
+│   ├── assets/
+│   │   ├── js/                # Client scripts (e.g. index.js – maps list, Mustache)
+│   │   └── views/            # HTML views (index.html, step1-git.html, …)
+│   ├── images/
+│   └── styles/
 ├── types/
 │   └── server.d.ts            # Module declaration for dist/server.js (copied to dist on build)
-├── dist/                      # Build output (server.js, server.d.ts, assets)
+├── dist/                      # Build output (published)
+│   ├── server.js              # Bundled server entry
+│   └── server.d.ts            # Types for consumers
 ├── vite.config.ts
 ├── tsconfig.json
 └── package.json
 ```
+
+Only `dist`, `public`, and `README.md` are included in the published package (`files`). Source (`src/`) is not published so consumers always get the built bundle.
 
 ## API / Routes
 
