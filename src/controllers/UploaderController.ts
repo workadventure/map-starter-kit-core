@@ -141,45 +141,6 @@ export class UploaderController {
             }
         });
 
-        // Route to get current configuration status
-        this.router.get('/status', async (_, res) => {
-            try {
-                const envSecretPath = path.join(process.cwd(), '.env.secret');
-
-                const hasSecretFile = await fs.promises.access(envSecretPath)
-                    .then(() => true)
-                    .catch(() => false);
-
-                let secretConfig: {
-                    mapStorageUrl: string | null;
-                    mapStorageApiKey: string | null;
-                    uploadDirectory: string | null;
-                } | null = null;
-                if (hasSecretFile) {
-                    const secretContent = await fs.promises.readFile(envSecretPath, 'utf-8');
-                    const mapStorageUrl = secretContent.match(/MAP_STORAGE_URL=(.+)/)?.[1]?.trim();
-                    const mapStorageApiKey = secretContent.match(/MAP_STORAGE_API_KEY=(.+)/)?.[1]?.trim();
-                    const uploadDirectory = secretContent.match(/UPLOAD_DIRECTORY=(.+)/)?.[1]?.trim();
-
-                    secretConfig = {
-                        mapStorageUrl: mapStorageUrl || null,
-                        mapStorageApiKey: mapStorageApiKey || null, // Hide the actual key
-                        uploadDirectory: uploadDirectory || null
-                    };
-                }
-                return res.json({
-                    hasSecretFile,
-                    secretConfig
-                });
-            } catch (error) {
-                console.error('Error getting uploader status:', error);
-                return res.status(500).json({
-                    error: 'Error getting uploader status',
-                    message: error instanceof Error ? error.message : 'Unknown error'
-                });
-            }
-        });
-
         // Route to get list of maps from map-storage (for self-hosted step4)
         this.router.get('/maps-storage-list', async (_, res) => {
             try {

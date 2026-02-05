@@ -1,65 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex">
-    <meta name="title" content="WorkAdventure Starter Kit">
-
-    <link href="public/styles/styles.css" rel="stylesheet">
-
-    <title>WorkAdventure build your map</title>
-    <link rel="icon" href="public/images/favicon.svg" type="image/svg+xml">
-</head>
+{{> head}}
 
 <body>
 <div class="content">
-    <header>
-        <div class="logo">
-            <a href="https://workadventu.re/" target="_blank" title="Workadventure">
-                <img src="public/images/logo.svg" alt="Workadventure logo" height="36" />
-            </a>
-        </div>
-        <div style="flex-grow: 1;"></div>
-        <div class="socials">
-            <a href="https://discord.gg/G6Xh9ZM9aR" target="_blank" title="discord">
-                <img src="/public/images/brand-discord.svg" alt="discord">
-            </a>
-            <a href="https://github.com/thecodingmachine/workadventure" target="_blank" title="github">
-                <img src="/public/images/brand-github.svg" alt="github">
-            </a>
-            <a href="https://www.youtube.com/channel/UCXJ9igV-kb9gw1ftR33y5tA" target="_blank" title="youtube">
-                <img src="/public/images/brand-youtube.svg" alt="youtube">
-            </a>
-            <a href="https://twitter.com/Workadventure_" target="_blank" title="twitter">
-                <img src="/public/images/brand-x.svg" alt="X">
-            </a>
-            <a href="https://www.linkedin.com/company/workadventu-re" target="_blank" title="linkedin">
-                <img src="/public/images/brand-linkedin.svg" alt="linkedin">
-            </a>
-        </div>
-        <div class="btn-header-wrapper">
-            <a href="#" class="btn btn-light">Talk to the community</a>
-            <a href="#" class="btn">Documentation</a>
-        </div>
-        <script type="module">
-            document.addEventListener("DOMContentLoaded", (event) => {
-                // Load index.js to have access to getMapsList
-                import('/public/assets/js/index.js').then((module) => {
-                    module.createBackgroundImageFade();
-                });
-            });
-        </script>
-    </header>
+    {{> header}}
     <main>
         <section class="form-center">
             <h1>
                 Which version of WorkAdventure do you use?
             </h1>
             <div class="sub-heading">
-                Choose the setup that matches how your WorkAdventure instance is running. This will help us adapt the publishing process to your setup.
+                Choose the setup that matches how you use WorkAdventure. This will help us adapt the publishing process.
             </div>
             <div class="radio-wrapper">
                 <label class="radio-card">
@@ -70,11 +23,11 @@
                         </svg>
 
                         <h2>
-                            I use self-hosted
+                            I use the online version (SaaS)
                         </h2>
                         <div>
-                            Your map is published on your own WorkAdventure instance.
-                            <strong>You manage the hosting, configuration, and updates yourself.</strong>
+                            Your map is published on the WorkAdventure platform.
+                            <strong>We handle hosting, updates, and infrastructure for you.</strong>
                         </div>
                     </div>
                 </label>
@@ -86,11 +39,11 @@
                         </svg>
 
                         <h2>
-                            I use SaaS version
+                            I'm self-hosting WorkAdventure
                         </h2>
                         <div>
-                            Your map is published on the WorkAdventure platform.
-                            <strong>We handle hosting, updates, and infrastructure for you.</strong>
+                            Your map is published on your own WorkAdventure server.
+                            <strong>You manage the hosting, configuration, and updates yourself.</strong>
                         </div>
                     </div>
                 </label>
@@ -113,7 +66,7 @@
         </div>
     </div>
 </div>
-<div class="bg"></div>
+{{> footer}}
 <script>
     // Get radio buttons by finding the label containing "I use self-hosted"
     const radioButtons = document.querySelectorAll('input[name="advanced"]');
@@ -123,7 +76,7 @@
     let selfHostedRadio = null;
     radioButtons.forEach(radio => {
         const label = radio.closest('label');
-        if (label && label.textContent.includes('I use self-hosted')) {
+        if (label && label.textContent.includes('I\'m self-hosting WorkAdventure')) {
             selfHostedRadio = radio;
         }
     });

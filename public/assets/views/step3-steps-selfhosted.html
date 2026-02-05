@@ -1,98 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex">
-    <meta name="title" content="WorkAdventure Starter Kit - Self-hosted">
-
-    <link href="public/styles/styles.css" rel="stylesheet">
-
-    <title>WorkAdventure test map - Self-hosted</title>
-    <link rel="icon" href="public/images/favicon.svg" type="image/svg+xml">
-    <script type="module">
-        document.addEventListener("DOMContentLoaded", (event) => {
-            import('/public/assets/js/index.js').then((module) => {
-                module.createBackgroundImageFade();
-            });
-        });
-    </script>
-</head>
+{{> head}}
 
 <body>
 <div class="content">
-    <header>
-        <div class="logo">
-            <a href="https://workadventu.re/" target="_blank" title="Workadventure">
-                <img src="public/images/logo.svg" alt="Workadventure logo" height="36" />
-            </a>
-        </div>
-        <div style="flex-grow: 1;"></div>
-        <div class="socials">
-            <a href="https://discord.gg/G6Xh9ZM9aR" target="_blank" title="discord">
-                <img src="/public/images/brand-discord.svg" alt="discord">
-            </a>
-            <a href="https://github.com/thecodingmachine/workadventure" target="_blank" title="github">
-                <img src="/public/images/brand-github.svg" alt="github">
-            </a>
-            <a href="https://www.youtube.com/channel/UCXJ9igV-kb9gw1ftR33y5tA" target="_blank" title="youtube">
-                <img src="/public/images/brand-youtube.svg" alt="youtube">
-            </a>
-            <a href="https://twitter.com/Workadventure_" target="_blank" title="twitter">
-                <img src="/public/images/brand-x.svg" alt="X">
-            </a>
-            <a href="https://www.linkedin.com/company/workadventu-re" target="_blank" title="linkedin">
-                <img src="/public/images/brand-linkedin.svg" alt="linkedin">
-            </a>
-        </div>
-        <div class="btn-header-wrapper">
-            <a href="https://discord.gg/G6Xh9ZM9aR" target="_blank" class="btn btn-light">Talk to the community</a>
-            <a href="https://docs.workadventu.re/map-building/" target="_blank" class="btn">Documentation</a>
-        </div>
-    </header>
+    {{> header}}
     <main class="container">
         <section id="configureSteps" class="form-center steps">
             <input type="hidden" id="stepProgress" value="1" />
             <div id="step1" class="step">
                 <div class="step-title">
                     <div class="step-number">1</div>
-                    <h2>Open your WorkAdventure self-hosted .env file</h2>
+                    <h2>Gather your WorkAdventure credentials</h2>
                 </div>
                 <div class="step-text">
-                    In your WorkAdventure self-hosted installation directory, open the <code>.env</code> file. You will need the values of <strong>PUBLIC_MAP_STORAGE_URL</strong> and <strong>MAP_STORAGE_API_TOKEN</strong> from this file for the next steps.
+                    <p>You will need help from your WorkAdventure administrator for this step. Please ask them to provide you
+                        with the URL and API token of your map storage service.</p>
+
+                    <ul>
+                        <li>
+                            If your WorkAdventure instance was deployed with <strong>docker-compose</strong>, the URL is
+                            most often <code>https://[your-server-url]/map-storage/</code>, and the API token can be found in
+                            the <code>.env</code> file under the variable <strong>MAP_STORAGE_API_TOKEN</strong>.
+                        </li>
+                        <li>
+                            If your WorkAdventure instance was deployed using the <strong>Kubernetes Helm chart</strong>, the URL is
+                            most often <code>https://[your-server-url]/map-storage/</code>
+                            (or <code>https://map-storage.[your-server-url]/</code>) if you are using <code>singleDomain: false</code> in your <code>values.yaml</code> file.
+                            The API token can be found in <code>values.yaml</code> under the key <code>commonSecretEnv.MAP_STORAGE_API_TOKEN</code>.
+                        </li>
+                    </ul>
                 </div>
                 <div style="margin-top: 16px;">
-                    <button id="step1-done" class="btn">I have opened my .env file</button>
+                    <button id="step1-done" class="btn">I have the credentials</button>
                 </div>
             </div>
 
             <div id="step2" class="step inactive">
                 <div class="step-title">
                     <div class="step-number">2</div>
-                    <h2>Copy your PUBLIC_MAP_STORAGE_URL</h2>
+                    <h2>Copy your Map storage URL</h2>
                 </div>
                 <div class="step-text">
-                    In your <code>.env</code> file, find the line <strong>PUBLIC_MAP_STORAGE_URL</strong>. Copy the value (the URL of your map storage service) and paste it below.
+                    Refer to the instructions in step 1 to find the URL of your map storage service.
                 </div>
                 <div style="margin-top: 8px;">
-                    <input id="mapStorageURL" type="url" placeholder="Paste here your MAP_STORAGE_URL..." />
+                    <input id="mapStorageURL" type="url" placeholder="Paste here your map-storage URL..." value="{{mapStorageUrl}}" />
                 </div>
             </div>
 
             <div id="step3" class="step inactive">
                 <div class="step-title">
                     <div class="step-number">3</div>
-                    <h2>Copy your MAP_STORAGE_API_TOKEN</h2>
+                    <h2>Copy your Map storage API token</h2>
                 </div>
                 <div class="step-text">
-                    In the same <code>.env</code> file, find the line <strong>MAP_STORAGE_API_TOKEN</strong>. Copy the token value and paste it below.
+                    Refer to the instructions in step 1 to find the API token of your map storage service. It is a long
+                    string of letters and numbers that serves as a password to authenticate your uploads.
                 </div>
                 <div>
                     <input id="apiKey"
                      type="password"
                      placeholder="Paste here your MAP_STORAGE_API_TOKEN..."
+                     value="{{mapStorageApiKey}}"
                      autocomplete="off"
                     />
                 </div>
@@ -101,38 +72,26 @@
             <div id="step4" class="step inactive">
                 <div class="step-title">
                     <div class="step-number">4</div>
-                    <h2>Choose a name / directory for your world</h2>
+                    <h2>Choose a name / directory for your maps</h2>
                 </div>
                 <div class="step-text">
-                    You can use an existing directory or create a new one. This is the directory where your maps will be stored on your map storage.
+                    <p>The maps you upload will be stored in this directory in our map storage.</p>
+
+                    <div class="alert">
+                        <div class="alert-text">
+                            Anything in this directory will be overwritten when you upload, so be careful to choose a
+                            unique name or a name that matches the world you want to update if you already have one.
+                        </div>
+                    </div>
+
+                    <p>The directory be visible in the URL of your maps.</p>
                 </div>
                 <div>
-                    <input id="uploadDirectory" type="text" placeholder="Name of your world" />
+                    <input id="uploadDirectory" type="text" placeholder="Name of your world" value="{{uploadDirectory}}" />
                 </div>
             </div>
         </section>
     </main>
-    <!-- Loading overlay -->
-    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <p id="loadingText">Verifying your data...</p>
-        </div>
-    </div>
-    <!-- Error popup -->
-    <div id="errorPopup" class="error-popup" style="display: none;">
-        <div class="error-popup-content">
-            <div class="error-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                    <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <h3 class="error-title">Error</h3>
-            <p id="errorMessage" class="error-message"></p>
-            <button id="errorCloseButton" class="btn btn-secondary error-close-btn">Close</button>
-        </div>
-    </div>
     <div class="button-wrapper">
         <div>
             <a href="step2-hosting" class="btn btn-ghost">
@@ -148,7 +107,7 @@
         </div>
     </div>
 </div>
-<div class="bg"></div>
+{{> footer}}
 <script>
     let stepProgress = document.getElementById('stepProgress');
     let step1 = document.getElementById('step1');
@@ -172,78 +131,52 @@
         }
     }
 
-    async function loadConfiguration() {
-        try {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.style.display = 'flex';
+    function revealStep(step) {
+        step.style.opacity = 1;
+        step.classList.remove("inactive");
+    }
 
-            const loadingText = document.getElementById('loadingText');
-            loadingText.innerHTML = 'Verifying your data...';
+    function applyPrefillState() {
+        let currentStep = 1;
 
-            const response = await fetch("/uploader/status");
-            if (!response.ok) {
-                throw new Error('Failed to load configuration status');
-            }
-
-            loadingText.innerHTML = 'Loading your configuration...';
-
-            const data = await response.json();
-
-            if (data.secretConfig) {
-                const config = data.secretConfig;
-                let currentStep = 1;
-
-                if (config.mapStorageUrl && isValidMapStorageUrl(config.mapStorageUrl)) {
-                    mapStorageURL.value = config.mapStorageUrl;
-                    mapStorageURL.classList.remove("error");
-                    mapStorageURL.classList.add("success");
-                    currentStep = 3;
-                    step2.style.opacity = 1;
-                    step2.classList.remove("inactive");
-                    step3.style.opacity = 1;
-                    step3.classList.remove("inactive");
-                    formIsValid = 1;
-                }
-
-                if (config.mapStorageApiKey) {
-                    apiKey.value = config.mapStorageApiKey;
-                    apiKey.classList.remove("error");
-                    apiKey.classList.add("success");
-                    currentStep = 4;
-                    step2.style.opacity = 1;
-                    step2.classList.remove("inactive");
-                    step3.style.opacity = 1;
-                    step3.classList.remove("inactive");
-                    step4.style.opacity = 1;
-                    step4.classList.remove("inactive");
-                    formIsValid = 2;
-                }
-
-                if (config.uploadDirectory) {
-                    uploadDirectory.value = config.uploadDirectory;
-                    if (config.uploadDirectory) {
-                        uploadDirectory.classList.remove("error");
-                        uploadDirectory.classList.add("success");
-                        formIsValid = 3;
-                    }
-                }
-
-                if (currentStep > 1) {
-                    stepProgress.value = currentStep;
-                }
-
-                loadingOverlay.style.display = 'none';
+        if (mapStorageURL.value) {
+            revealStep(step2);
+            currentStep = 2;
+            if (isValidMapStorageUrl(mapStorageURL.value)) {
+                mapStorageURL.classList.remove("error");
+                mapStorageURL.classList.add("success");
+                revealStep(step3);
+                currentStep = 3;
+                formIsValid = 1;
             } else {
-                loadingOverlay.style.display = 'none';
+                mapStorageURL.classList.remove("success");
+                mapStorageURL.classList.add("error");
             }
-        } catch (error) {
-            console.error('Error loading configuration:', error);
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.style.display = 'none';
+        }
+
+        if (apiKey.value) {
+            apiKey.classList.remove("error");
+            apiKey.classList.add("success");
+            revealStep(step3);
+            revealStep(step4);
+            currentStep = 4;
+            formIsValid = 2;
+        }
+
+        if (uploadDirectory.value) {
+            uploadDirectory.classList.remove("error");
+            uploadDirectory.classList.add("success");
+            revealStep(step4);
+            currentStep = 4;
+            formIsValid = 3;
+        }
+
+        if (currentStep > 1) {
+            stepProgress.value = currentStep;
         }
     }
 
-    loadConfiguration();
+    applyPrefillState();
 
     step1DoneButton.addEventListener("click", (event) => {
         stepProgress.value = 2;
@@ -298,28 +231,6 @@
         }
     });
 
-    function showErrorPopup(message) {
-        const errorPopup = document.getElementById('errorPopup');
-        const errorMessage = document.getElementById('errorMessage');
-        errorMessage.textContent = message;
-        errorPopup.style.display = 'flex';
-    }
-
-    function hideErrorPopup() {
-        const errorPopup = document.getElementById('errorPopup');
-        errorPopup.style.display = 'none';
-    }
-
-    document.getElementById('errorCloseButton').addEventListener('click', hideErrorPopup);
-
-    document.getElementById('errorPopup').addEventListener('click', function (e) {
-        if (e.target === this) {
-            hideErrorPopup();
-        }
-    });
-
-    const loadingText = document.getElementById('loadingText');
-
     saveButton.addEventListener("click", async (event) => {
         if (!mapStorageURL.value || !isValidMapStorageUrl(mapStorageURL.value) ||
             !apiKey.value || !uploadDirectory.value) {
@@ -327,14 +238,13 @@
             return;
         }
 
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        loadingOverlay.style.display = 'flex';
-
         const startTime = Date.now();
         const minDuration = 2000;
 
         try {
-            loadingText.innerHTML = 'Saving your configuration...';
+            if (typeof window.showLoadingOverlay === 'function') {
+                window.showLoadingOverlay('Saving your configuration...');
+            }
 
             const configureResponse = await fetch("/uploader/configure", {
                 method: "POST",
@@ -353,7 +263,9 @@
                 throw new Error(errorData.message || errorData.error || 'Failed to save configuration. Please check your inputs and try again.');
             }
 
-            loadingText.innerHTML = 'Uploading your map...';
+            if (typeof window.showLoadingOverlay === 'function') {
+                window.showLoadingOverlay('Uploading your map...');
+            }
 
             const uploadResponse = await fetch("/uploader/upload", {
                 method: "POST",
@@ -373,10 +285,15 @@
                 await new Promise(resolve => setTimeout(resolve, minDuration - elapsed));
             }
 
-            window.location.href = "/step4-validated-selfhosted";
+            const redirectUrl = typeof window.getPostPublishRedirect === 'function'
+                ? window.getPostPublishRedirect(mapStorageURL.value)
+                : '/step4-validated-selfhosted';
+            window.location.href = redirectUrl;
         } catch (error) {
             console.error('Error saving configuration:', error);
-            loadingOverlay.style.display = 'none';
+            if (typeof window.hideLoadingOverlay === 'function') {
+                window.hideLoadingOverlay();
+            }
 
             const errorMessage = error instanceof Error ? error.message : 'An error occurred while saving your configuration. Please try again.';
             showErrorPopup(errorMessage);
@@ -384,112 +301,6 @@
     });
 </script>
 <style>
-    .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(27, 42, 65, 0.9);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
-
-    .loading-content {
-        text-align: center;
-        color: white;
-    }
-
-    .loading-spinner {
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid #66E979;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 20px;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .loading-content p {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 500;
-    }
-
-    .error-popup {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(27, 42, 65, 0.85);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-        animation: fadeIn 0.3s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    .error-popup-content {
-        background: rgba(27, 42, 65, 0.95);
-        border: 2px solid #ff4444;
-        border-radius: 16px;
-        padding: 32px;
-        max-width: 500px;
-        width: 90%;
-        text-align: center;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        animation: slideUp 0.3s ease-out;
-    }
-
-    @keyframes slideUp {
-        from { transform: translateY(20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-
-    .error-icon {
-        color: #ff4444;
-        margin-bottom: 16px;
-        display: flex;
-        justify-content: center;
-    }
-
-    .error-icon svg {
-        width: 64px;
-        height: 64px;
-    }
-
-    .error-title {
-        color: #ff4444;
-        font-size: 24px;
-        font-weight: bold;
-        margin: 0 0 16px 0;
-    }
-
-    .error-message {
-        color: #ffffff;
-        font-size: 16px;
-        line-height: 1.5;
-        margin: 0 0 24px 0;
-    }
-
-    .error-close-btn {
-        margin-top: 8px;
-        min-width: 120px;
-    }
-
     .step-text code {
         background: rgba(255, 255, 255, 0.1);
         padding: 2px 6px;
