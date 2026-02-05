@@ -115,6 +115,7 @@ const controllers = [
 ];
 
 // Verify and log all controllers created
+void controllers;
 /*controllers.forEach(controller => {
     console.info(`Controller started: ${controller.constructor.name}`);
 });*/

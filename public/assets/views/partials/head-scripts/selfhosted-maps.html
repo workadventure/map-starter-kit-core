@@ -26,7 +26,7 @@
                 // Note: replacing "map-storage" by "play" is a convention for self-hosted setups, but could absolutely
                 // not work in some cases (e.g. if play and map-storage are on different domains or if the URL structure is different).
                 let playBase = (playBaseUrl && playBaseUrl.trim())
-                    ? playBaseUrl.replace(/\/$/, '')
+                    ? playBaseUrl.replace(/\/$/, '')+"/"
                     : undefined;
                 if (playBase === undefined) {
                     const mapStorageUrlObj = new URL(mapStorageUrl || '', window.location.origin);
