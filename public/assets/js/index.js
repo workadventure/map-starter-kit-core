@@ -162,4 +162,71 @@ async function loadTMJ() {
     }
 }
 
-export { getMapsList, getImagesList, createBackgroundImageFade, loadTMJ };
+async function setupPublishingActions() {
+    const publishButton = document.getElementById('publishNowButton');
+    if (!publishButton) return;
+    const isInitiallyEnabled = !publishButton.disabled;
+
+    publishButton.addEventListener('click', async () => {
+        if (publishButton.disabled) {
+            return;
+        }
+        const defaultLabel = publishButton.textContent;
+        publishButton.disabled = true;
+        publishButton.setAttribute('aria-disabled', 'true');
+        publishButton.setAttribute('aria-busy', 'true');
+        publishButton.textContent = 'Publishing...';
+        const startTime = Date.now();
+        const minDuration = 2000;
+        const mapStorageInput = document.getElementById('mapStorageURL');
+        const mapStorageUrl = mapStorageInput && 'value' in mapStorageInput
+            ? mapStorageInput.value
+            : '';
+
+        if (typeof window.showLoadingOverlay === 'function') {
+            window.showLoadingOverlay('Publishing your map...');
+        }
+
+        try {
+            const response = await fetch('/uploader/upload', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.message || errorData.error || 'Failed to publish maps. Please try again.';
+                throw new Error(errorMessage);
+            }
+
+            const elapsed = Date.now() - startTime;
+            if (elapsed < minDuration) {
+                await new Promise(resolve => setTimeout(resolve, minDuration - elapsed));
+            }
+
+            const redirectUrl = typeof window.getPostPublishRedirect === 'function'
+                ? window.getPostPublishRedirect(mapStorageUrl)
+                : '/step4-validated';
+            window.location.href = redirectUrl;
+        } catch (error) {
+            console.error('Error publishing maps:', error);
+            if (typeof window.hideLoadingOverlay === 'function') {
+                window.hideLoadingOverlay();
+            }
+            const errorMessage = error instanceof Error ? error.message : 'An error occurred while publishing maps.';
+            if (typeof window.showErrorPopup === 'function') {
+                window.showErrorPopup(errorMessage);
+            } else {
+                window.alert(errorMessage);
+            }
+            publishButton.textContent = defaultLabel;
+            publishButton.removeAttribute('aria-busy');
+            publishButton.disabled = !isInitiallyEnabled;
+            publishButton.setAttribute('aria-disabled', String(!isInitiallyEnabled));
+        }
+    });
+}
+
+export { getMapsList, getImagesList, createBackgroundImageFade, loadTMJ, setupPublishingActions };

@@ -10,9 +10,6 @@ export default defineConfig({
             input: {
                 server: "./src/server.ts"
             },
-            output: {
-                exports: "named",
-            },
         },
     },
     plugins: [
@@ -28,6 +25,9 @@ export default defineConfig({
             // Optional, default: 'viteNodeApp'
             // the name of named export of you app from the appPath file
             exportName: 'viteNodeApp',
+
+            // Output an ESM bundle for the server entry.
+            outputFormat: 'esm',
 
             // Optional, default: false
             // if you want to init your app on boot, set this to true

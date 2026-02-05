@@ -115,9 +115,10 @@ const controllers = [
 ];
 
 // Verify and log all controllers created
-controllers.forEach(controller => {
+void controllers;
+/*controllers.forEach(controller => {
     console.info(`Controller started: ${controller.constructor.name}`);
-});
+});*/
 
 export default app;
 // Export for VitePluginNode compatibility
